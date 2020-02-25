@@ -1,0 +1,8 @@
+{
+  "config": {
+    "user": "admin",
+    "cred": "Einstein195",
+    "host": "frcteam195.cmdlvflptajw.us-east-1.rds.amazonaws.com",
+    "database": "team195_scouting"
+  }
+}
