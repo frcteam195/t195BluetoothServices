@@ -29,22 +29,22 @@ def threaded(client_sock):
                 if 'payload' in jsonstr:
                     payload = jsonstr['payload']
                     computerName = payload['computerName']
-                config = Config.get(computerName)
-                client_sock.send(config)
+                config = json.loads(Config.get(computerName)).encode()
+                client_sock.send(config.by)
             elif jsonstr['cmd'] == 'get-users':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
-                users = Users.get()
+                users = json.loads(Users.get()).encode()
                 client_sock.send(users)
             elif jsonstr['cmd'] == 'get-matches':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 if 'payload' in jsonstr:
                     payload = jsonstr['payload']
                     eventId = payload['eventId']
-                matches = Config.get(eventId)
+                matches = json.loads(Config.get(eventId)).encode()
                 client_sock.send(matches)
             elif jsonstr['cmd'] == 'get-teams':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
-                teams = Teams.get()
+                teams = json.loads(Teams.get()).encode()
                 client_sock.send(teams)
             print_lock.release()
             break;
