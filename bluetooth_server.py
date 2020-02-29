@@ -30,7 +30,7 @@ def threaded(client_sock):
                     payload = jsonstr['payload']
                     computerName = payload['computerName']
                 config = json.dumps(Config.get(computerName)).encode()
-                client_sock.send(config.by)
+                client_sock.send(config)
             elif jsonstr['cmd'] == 'get-users':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 users = json.dumps(Users.get()).encode()
