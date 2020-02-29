@@ -1,4 +1,4 @@
-from frcteam195.database import Users, Config, MatchScouting
+from frcteam195.database import Users, Config, MatchScouting, Teams
 from bluetooth import *
 from _thread import *
 import threading
@@ -26,7 +26,26 @@ def threaded(client_sock):
             logging.info(str(datetime.datetime.now()) + " " + jsonstr['cmd'])
             if jsonstr['cmd'] == "get-config":
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
-                client_sock.send(b"{'result': 'success', 'payload':{'role': 'Red 1', 'event': 'Winter Nationals'}}")
+                if 'payload' in jsonstr:
+                    payload = jsonstr['payload']
+                    computerName = payload['computerName']
+                config = Config.get(computerName)
+                client_sock.send(config)
+            elif jsonstr['cmd'] == 'get-users':
+                logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
+                users = Users.get()
+                client_sock.send(users)
+            elif jsonstr['cmd'] == 'get-matches':
+                logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
+                if 'payload' in jsonstr:
+                    payload = jsonstr['payload']
+                    eventId = payload['eventId']
+                matches = Config.get(eventId)
+                client_sock.send(matches)
+            elif jsonstr['cmd'] == 'get-teams':
+                logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
+                teams = Teams.get()
+                client_sock.send(teams)
             print_lock.release()
             break;
         except IOError as ioe:
