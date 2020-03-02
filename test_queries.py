@@ -14,8 +14,10 @@ configs = Config.get('Team 195 Scout 1')
 for config in configs:
     print(json.dumps(config))
 
+ret_string = "{{'result': '{}', 'payload':{} }}"
+result = 'success'
 teams = Teams.get()
 for team in teams:
-    print(team)
+    print(ret_string.format(result, teams))
 
 
