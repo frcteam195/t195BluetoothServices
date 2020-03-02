@@ -1,4 +1,5 @@
 from frcteam195.database import Users, Config, MatchScouting, Teams
+import json
 
 
 users = Users.get()
@@ -11,7 +12,7 @@ for match in matches:
 
 configs = Config.get('Team 195 Scout 1')
 for config in configs:
-    print(config)
+    print(json.dumps(config))
 
 teams = Teams.get()
 for team in teams:

@@ -13,6 +13,8 @@ print_lock = threading.Lock()
 
 
 def threaded(client_sock):
+    ret_string = "{'result': '{0}', 'payload':{1}"
+    result = 'success'
     while True:
         try:
             data = client_sock.recv(1024)
@@ -29,27 +31,32 @@ def threaded(client_sock):
                 if 'payload' in jsonstr:
                     payload = jsonstr['payload']
                     computerName = payload['computerName']
-                config = json.dumps(Config.get(computerName)).encode()
-                client_sock.send(config)
+                config = json.dumps(Config.get(computerName))
+                ret_bytes = ret_string.format(result, config).encode()
+                client_sock.send(ret_bytes)
             elif jsonstr['cmd'] == 'get-users':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
-                users = json.dumps(Users.get()).encode()
-                client_sock.send(users)
+                users = json.dumps(Users.get())
+                ret_bytes = ret_string.format(result, users).encode()
+                client_sock.send(ret_bytes)
             elif jsonstr['cmd'] == 'get-matches':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 if 'payload' in jsonstr:
                     payload = jsonstr['payload']
                     eventId = payload['eventId']
-                matches = json.dumps(Config.get(eventId)).encode()
-                client_sock.send(matches)
+                matches = json.dumps(Config.get(eventId))
+                ret_bytes = ret_string.format(result, matches).encode()
+                client_sock.send(ret_bytes)
             elif jsonstr['cmd'] == 'get-teams':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
-                teams = json.dumps(Teams.get()).encode()
-                client_sock.send(teams)
+                teams = json.dumps(Teams.get())
+                ret_bytes = ret_string.format(result, teams).encode()
+                client_sock.send(ret_bytes)
             print_lock.release()
             break;
         except IOError as ioe:
             logging.error(str(datetime.datetime.now()) + " Error: {0}".format(ioe))
+            ret_string.format('failure', '')
     client_sock.close()
 
 
