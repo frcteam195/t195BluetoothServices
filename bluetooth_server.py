@@ -13,7 +13,7 @@ print_lock = threading.Lock()
 
 
 def threaded(client_sock):
-    ret_string = "{'result': '{0}', 'payload':{1}}"
+    ret_string = "{{'result': '{0}', 'payload':{1} }}"
     result = 'success'
     while True:
         try:
