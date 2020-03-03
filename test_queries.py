@@ -1,6 +1,6 @@
 from frcteam195.database import Users, Config, MatchScouting, Teams
 import json
-
+import hashlib
 
 #users = Users.get()
 #for user in users:
@@ -11,7 +11,10 @@ import json
 #    print(match)
 
 configs = Config.get('Team 195 Scout 1')
-print(configs)
+jconfig = json.dumps(configs).encode()
+hash_object = hashlib.md5(jconfig)
+print(hash_object.hexdigest())
+#print(configs)
 #for config in configs:
 #    print(json.dumps(config))
 
