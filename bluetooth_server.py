@@ -19,7 +19,6 @@ def send_reply(client_sock, msg):
     while bytes_sent < msg_size:
         bytes_sent += client_sock.send(bytes_to_send)
         bytes_to_send = bytes_to_send[bytes_sent-1:]
-    client_sock.send(0x03)
 
 
 def threaded(client_sock):
@@ -43,12 +42,12 @@ def threaded(client_sock):
                     computerName = payload['computerName']
                 config = json.dumps(Config.get(computerName))
                 ret_bytes = ret_string.format(result, config).encode()
-                client_sock.send(ret_bytes)
+                send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-users':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 users = json.dumps(Users.get())
                 ret_bytes = ret_string.format(result, users).encode()
-                client_sock.send(ret_bytes)
+                send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-matches':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 if 'payload' in jsonstr:
@@ -56,12 +55,12 @@ def threaded(client_sock):
                     eventId = payload['eventId']
                 matches = json.dumps(MatchScouting.get(eventId))
                 ret_bytes = ret_string.format(result, matches).encode()
-                client_sock.send(ret_bytes)
+                send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-teams':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 teams = json.dumps(Teams.get())
                 ret_bytes = ret_string.format(result, teams).encode()
-                client_sock.send(ret_bytes)
+                send_reply(client_sock, ret_bytes)
             print_lock.release()
             break;
         except IOError as ioe:
