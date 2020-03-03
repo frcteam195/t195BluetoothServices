@@ -37,7 +37,7 @@ def threaded(client_sock):
                 break
 
             jsonstr = json.loads(data)
-            last_hash = None
+            last_hash = "not a hash"
             if 'last_hash' in jsonstr:
                 last_hash = jsonstr['last_hash']
             logging.info(str(datetime.datetime.now()) + " " + jsonstr['cmd'])
