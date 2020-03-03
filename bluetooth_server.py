@@ -19,7 +19,7 @@ def send_reply(client_sock, msg):
     while bytes_sent < msg_size:
         bytes_sent += client_sock.send(bytes_to_send)
         bytes_to_send = bytes_to_send[bytes_sent-1:]
-    client_sock.send(0x03)
+    client_sock.send(b'\0x03')
 
 
 def threaded(client_sock):
