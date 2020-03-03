@@ -25,7 +25,7 @@ def send_reply(client_sock, msg):
 
 
 def threaded(client_sock):
-    ret_string = "{{'result': '{0}', 'payload':{1} 'hash': '{2}' }}"
+    ret_string = "{{'result': '{0}', 'payload':{1}, 'hash': '{2}'}}"
     result = 'success'
     while True:
         try:
