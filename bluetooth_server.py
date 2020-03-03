@@ -44,7 +44,7 @@ def threaded(client_sock):
                 if 'payload' in jsonstr:
                     payload = jsonstr['payload']
                     eventId = payload['eventId']
-                matches = json.dumps(Config.get(eventId))
+                matches = json.dumps(MatchScouting.get(eventId))
                 ret_bytes = ret_string.format(result, matches).encode()
                 client_sock.send(ret_bytes)
             elif jsonstr['cmd'] == 'get-teams':
