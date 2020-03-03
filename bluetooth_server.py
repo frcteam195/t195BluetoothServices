@@ -11,7 +11,7 @@ import hashlib
 
 logging.basicConfig(level=logging.INFO)
 print_lock = threading.Lock()
-skip_msg = "{{'result': 'skip'}}"
+skip_msg = "{'result': 'skip'}"
 
 
 def send_reply(client_sock, msg):
