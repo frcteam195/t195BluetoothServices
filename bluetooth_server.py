@@ -6,10 +6,12 @@ import datetime
 import logging
 import sys
 import json
+import hashlib
 
 
 logging.basicConfig(level=logging.INFO)
 print_lock = threading.Lock()
+skip_msg = "{{'result': 'skip'}}"
 
 
 def send_reply(client_sock, msg):
@@ -23,11 +25,11 @@ def send_reply(client_sock, msg):
 
 
 def threaded(client_sock):
-    ret_string = "{{'result': '{0}', 'payload':{1} }}"
+    ret_string = "{{'result': '{0}', 'payload':{1} 'hash': '{2}' }}"
     result = 'success'
     while True:
         try:
-            data = client_sock.recv(1024)
+            data = client_sock.recv(2048)
             logging.info(str(datetime.datetime.now()) + " received [%s]" % data)
             if data == b'\x03':
                 logging.info(str(datetime.datetime.now()) + " ETX character found!")
@@ -35,6 +37,9 @@ def threaded(client_sock):
                 break
 
             jsonstr = json.loads(data)
+            last_hash = None
+            if 'last_hash' in jsonstr:
+                last_hash = jsonstr['last_hash']
             logging.info(str(datetime.datetime.now()) + " " + jsonstr['cmd'])
             if jsonstr['cmd'] == "get-config":
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
@@ -42,12 +47,20 @@ def threaded(client_sock):
                     payload = jsonstr['payload']
                     computerName = payload['computerName']
                 config = json.dumps(Config.get(computerName))
-                ret_bytes = ret_string.format(result, config).encode()
+                this_hash = hashlib.md5(config).hexdigest()
+                if this_hash == last_hash:
+                    ret_bytes = skip_msg.encode()
+                else:
+                    ret_bytes = ret_string.format(result, config, this_hash).encode()
                 send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-users':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 users = json.dumps(Users.get())
-                ret_bytes = ret_string.format(result, users).encode()
+                this_hash = hashlib.md5(users).hexdigest()
+                if this_hash == last_hash:
+                    ret_bytes = skip_msg.encode()
+                else:
+                    ret_bytes = ret_string.format(result, users, this_hash).encode()
                 send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-matches':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
@@ -55,12 +68,20 @@ def threaded(client_sock):
                     payload = jsonstr['payload']
                     eventId = payload['eventId']
                 matches = json.dumps(MatchScouting.get(eventId))
-                ret_bytes = ret_string.format(result, matches).encode()
+                this_hash = hashlib.md5(matches).hexdigest()
+                if this_hash == last_hash:
+                    ret_bytes = skip_msg.encode()
+                else:
+                    ret_bytes = ret_string.format(result, matches, this_hash).encode()
                 send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-teams':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 teams = json.dumps(Teams.get())
-                ret_bytes = ret_string.format(result, teams).encode()
+                this_hash = hashlib.md5(teams).hexdigest()
+                if this_hash == last_hash:
+                    ret_bytes = skip_msg.encode()
+                else:
+                    ret_bytes = ret_string.format(result, teams, this_hash).encode()
                 send_reply(client_sock, ret_bytes)
             print_lock.release()
             break;
