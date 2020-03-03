@@ -47,7 +47,7 @@ def threaded(client_sock):
                     payload = jsonstr['payload']
                     computerName = payload['computerName']
                 config = json.dumps(Config.get(computerName))
-                this_hash = hashlib.md5(config).hexdigest()
+                this_hash = hashlib.md5(config.encode()).hexdigest()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
@@ -56,7 +56,7 @@ def threaded(client_sock):
             elif jsonstr['cmd'] == 'get-users':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 users = json.dumps(Users.get())
-                this_hash = hashlib.md5(users).hexdigest()
+                this_hash = hashlib.md5(users.encode()).hexdigest()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
@@ -68,7 +68,7 @@ def threaded(client_sock):
                     payload = jsonstr['payload']
                     eventId = payload['eventId']
                 matches = json.dumps(MatchScouting.get(eventId))
-                this_hash = hashlib.md5(matches).hexdigest()
+                this_hash = hashlib.md5(matches.encode()).hexdigest()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
@@ -77,7 +77,7 @@ def threaded(client_sock):
             elif jsonstr['cmd'] == 'get-teams':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 teams = json.dumps(Teams.get())
-                this_hash = hashlib.md5(teams).hexdigest()
+                this_hash = hashlib.md5(teams.encode()).hexdigest()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
