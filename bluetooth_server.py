@@ -13,7 +13,7 @@ print_lock = threading.Lock()
 
 
 def send_reply(client_sock, msg):
-    msg_size = msg.length
+    msg_size = len(msg)
     bytes_sent = 0
     bytes_to_send = msg
     while bytes_sent < msg_size:
