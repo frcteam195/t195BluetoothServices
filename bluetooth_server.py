@@ -33,12 +33,12 @@ def threaded(client_sock):
                     computerName = payload['computerName']
                 config = json.dumps(Config.get(computerName))
                 ret_bytes = ret_string.format(result, config).encode()
-                client_sock.send(ret_bytes)
+                client_sock.sendall(ret_bytes)
             elif jsonstr['cmd'] == 'get-users':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 users = json.dumps(Users.get())
                 ret_bytes = ret_string.format(result, users).encode()
-                client_sock.send(ret_bytes)
+                client_sock.sendall(ret_bytes)
             elif jsonstr['cmd'] == 'get-matches':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 if 'payload' in jsonstr:
@@ -46,12 +46,12 @@ def threaded(client_sock):
                     eventId = payload['eventId']
                 matches = json.dumps(MatchScouting.get(eventId))
                 ret_bytes = ret_string.format(result, matches).encode()
-                client_sock.send(ret_bytes)
+                client_sock.sendall(ret_bytes)
             elif jsonstr['cmd'] == 'get-teams':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 teams = json.dumps(Teams.get())
                 ret_bytes = ret_string.format(result, teams).encode()
-                client_sock.send(ret_bytes)
+                client_sock.sendall(ret_bytes)
             print_lock.release()
             break;
         except IOError as ioe:
