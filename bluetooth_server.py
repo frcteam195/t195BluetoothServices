@@ -1,4 +1,4 @@
-from frcteam195.database import Users, Config, MatchScouting, Teams
+from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud
 from bluetooth import *
 from _thread import *
 import threading
@@ -82,6 +82,27 @@ def threaded(client_sock):
                     ret_bytes = skip_msg.encode()
                 else:
                     ret_bytes = ret_string.format(result, teams, this_hash).encode()
+                send_reply(client_sock, ret_bytes)
+            elif jsonstr['cmd'] == 'get-words':
+                logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
+                words = json.dumps(Words.get())
+                this_hash = hashlib.md5(words.encode()).hexdigest()
+                if this_hash == last_hash:
+                    ret_bytes = skip_msg.encode()
+                else:
+                    ret_bytes = ret_string.format(result, words, this_hash).encode()
+                send_reply(client_sock, ret_bytes)
+            elif jsonstr['cmd'] == 'get-word-cloud':
+                logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
+                if 'payload' in jsonstr:
+                    payload = jsonstr['payload']
+                    eventId = payload['eventId']
+                wordcloud = json.dumps(WordCloud.get(eventId))
+                this_hash = hashlib.md5(wordcloud.encode()).hexdigest()
+                if this_hash == last_hash:
+                    ret_bytes = skip_msg.encode()
+                else:
+                    ret_bytes = ret_string.format(result, wordcloud, this_hash).encode()
                 send_reply(client_sock, ret_bytes)
             print_lock.release()
             break;
