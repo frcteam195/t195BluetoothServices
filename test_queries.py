@@ -1,4 +1,4 @@
-from frcteam195.database import Users, Config, MatchScouting, Teams
+from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud
 import json
 import hashlib
 
@@ -8,14 +8,14 @@ import hashlib
 
 #matches = MatchScouting.get(1)
 #for match in matches:
-#    print(match)
+#    print(match['Team'])
 
-configs = Config.get('Team 195 Scout 1')
-jconfig = json.dumps(configs).encode()
-hash_object = hashlib.md5(jconfig).hexdigest()
-print(hash_object)
-if hash_object == "ef50a0aa7444fb905639e4c78819dbcd":
-    print("They match!")
+# configs = Config.get('Team 195 Scout 1')
+# jconfig = json.dumps(configs).encode()
+# hash_object = hashlib.md5(jconfig).hexdigest()
+# print(hash_object)
+# if hash_object == "ef50a0aa7444fb905639e4c78819dbcd":
+#     print("They match!")
 
 #print(configs)
 #for config in configs:
@@ -25,6 +25,10 @@ if hash_object == "ef50a0aa7444fb905639e4c78819dbcd":
 #result = 'success'
 #teams = Teams.get()
 #for team in teams:
+#    print(team)
 #    print(ret_string.format(result, teams))
 
+wordCloud = WordCloud.get(1)
+for word in wordCloud:
+    print(word)
 
