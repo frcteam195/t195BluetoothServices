@@ -10,7 +10,7 @@ import hashlib
 
 
 logging.basicConfig(level=logging.INFO)
-print_lock = threading.Lock()
+#print_lock = threading.Lock()
 skip_msg = "{'result': 'skip'}"
 
 
@@ -33,7 +33,7 @@ def threaded(client_sock):
             logging.info(str(datetime.datetime.now()) + " received [%s]" % data)
             if data == b'\x03':
                 logging.info(str(datetime.datetime.now()) + " ETX character found!")
-                print_lock.release()
+#                print_lock.release()
                 break
 
             jsonstr = json.loads(data)
@@ -119,7 +119,7 @@ def threaded(client_sock):
                         payload = jsonstr['payload']
                         Teams.put(key, payload)
             logging.error(str(datetime.datetime.now()) + " Releasing lock.")
-            print_lock.release()
+#            print_lock.release()
             break;
         except IOError as ioe:
             logging.error(str(datetime.datetime.now()) + " Error: {0}".format(ioe))
@@ -149,12 +149,14 @@ def Main():
         try:
             client_sock, client_info = server_sock.accept()
             logging.info(str(datetime.datetime.now()) + " Accepted connection from " + str(client_info))
-            print_lock.acquire()
+#            print_lock.acquire()
             logging.info(str(datetime.datetime.now()) + " Starting thread")
-            start_new_thread(threaded, (client_sock,))
+#            start_new_thread(threaded, (client_sock,))
+            threaded(client_sock)
             logging.info(str(datetime.datetime.now()) + " Thread started")
         except:
             logging.error("Unexpected error: %s".format(sys.exc_info()[0]))
+            continue
     server_sock.close()
 
 
