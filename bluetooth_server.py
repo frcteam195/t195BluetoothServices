@@ -10,7 +10,7 @@ import hashlib
 
 
 logging.basicConfig(level=logging.INFO)
-#print_lock = threading.Lock()
+print_lock = threading.Lock()
 skip_msg = "{'result': 'skip'}"
 
 
@@ -33,7 +33,7 @@ def threaded(client_sock):
             logging.info(str(datetime.datetime.now()) + " received [%s]" % data)
             if data == b'\x03':
                 logging.info(str(datetime.datetime.now()) + " ETX character found!")
-#                print_lock.release()
+                print_lock.release()
                 break
 
             jsonstr = json.loads(data)
@@ -68,11 +68,13 @@ def threaded(client_sock):
                     payload = jsonstr['payload']
                     eventId = payload['eventId']
                 matches = json.dumps(MatchScouting.get(eventId))
+                logging.info("Size of matches is {}".format(len(matches)))
                 this_hash = hashlib.md5(matches.encode()).hexdigest()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
                     ret_bytes = ret_string.format(result, matches, this_hash).encode()
+                logging.info("Size of matches return string is {}".format(len(ret_bytes)))
                 send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-teams':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
@@ -119,10 +121,11 @@ def threaded(client_sock):
                         payload = jsonstr['payload']
                         Teams.put(key, payload)
             logging.info(str(datetime.datetime.now()) + " Releasing lock.")
-#            print_lock.release()
+            print_lock.release()
             break;
         except IOError as ioe:
             logging.error(str(datetime.datetime.now()) + " Error: {0}".format(ioe))
+            print_lock.release()
             break
     client_sock.close()
 
@@ -150,10 +153,9 @@ def Main():
         try:
             client_sock, client_info = server_sock.accept()
             logging.info(str(datetime.datetime.now()) + " Accepted connection from " + str(client_info))
-#            print_lock.acquire()
+            print_lock.acquire()
             logging.info(str(datetime.datetime.now()) + " Starting command handling")
-#            start_new_thread(threaded, (client_sock,))
-            threaded(client_sock)
+            start_new_thread(threaded, (client_sock,))
             logging.info(str(datetime.datetime.now()) + " Command handling done")
         except:
             logging.error("Unexpected error: %s".format(sys.exc_info()[0]))
