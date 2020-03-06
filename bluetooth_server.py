@@ -150,10 +150,10 @@ def Main():
             client_sock, client_info = server_sock.accept()
             logging.info(str(datetime.datetime.now()) + " Accepted connection from " + str(client_info))
 #            print_lock.acquire()
-            logging.info(str(datetime.datetime.now()) + " Starting thread")
+            logging.info(str(datetime.datetime.now()) + " Starting command handling")
 #            start_new_thread(threaded, (client_sock,))
             threaded(client_sock)
-            logging.info(str(datetime.datetime.now()) + " Thread started")
+            logging.info(str(datetime.datetime.now()) + " Command handling done")
         except:
             logging.error("Unexpected error: %s".format(sys.exc_info()[0]))
             continue
