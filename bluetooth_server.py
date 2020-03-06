@@ -108,18 +108,23 @@ def threaded(client_sock):
                 send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'put-match-scouting':
                 logging.info(str(datetime.datetime.now()) + " Received put-match-scouting request {0}".format(jsonstr['cmd']))
+                ret = 'failure'
                 if 'key' in jsonstr:
                     key = jsonstr['key']
                     if 'payload' in jsonstr:
                         payload = jsonstr['payload']
-                        MatchScouting.put(key, payload)
+                        ret = MatchScouting.put(key, payload)
+                ret_string = ret_string.format(ret, 0, "").encode()
+                send_reply(client_sock, ret_string)
             elif jsonstr['cmd'] == 'put-teams':
                 logging.info(str(datetime.datetime.now()) + " Received put-teams request {0}".format(jsonstr['cmd']))
                 if 'key' in jsonstr:
                     key = jsonstr['key']
                     if 'payload' in jsonstr:
                         payload = jsonstr['payload']
-                        Teams.put(key, payload)
+                        ret = Teams.put(key, payload)
+                ret_string = ret_string.format(ret, 0, "").encode()
+                send_reply(client_sock, ret_string)
             logging.info(str(datetime.datetime.now()) + " Releasing lock.")
             print_lock.release()
             break;

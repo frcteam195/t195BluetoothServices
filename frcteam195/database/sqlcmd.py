@@ -26,4 +26,8 @@ def put(cmd):
     cursor = conn.cursor()
     cursor.execute(cmd)
     conn.commit()
+    if cursor.rowcount < 1:
+        return("failure")
+    else:
+        return("success")
 
