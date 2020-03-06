@@ -104,6 +104,20 @@ def threaded(client_sock):
                 else:
                     ret_bytes = ret_string.format(result, wordcloud, this_hash).encode()
                 send_reply(client_sock, ret_bytes)
+            elif jsonstr['cmd'] == 'put-match-scouting':
+                logging.info(str(datetime.datetime.now()) + " Received put-match-scouting request {0}".format(jsonstr['cmd']))
+                if 'key' in jsonstr:
+                    key = jsonstr['key']
+                    if 'payload' in jsonstr:
+                        payload = jsonstr['payload']
+                        MatchScouting.put(key, payload)
+            elif jsonstr['cmd'] == 'put-teams':
+                logging.info(str(datetime.datetime.now()) + " Received put-teams request {0}".format(jsonstr['cmd']))
+                if 'key' in jsonstr:
+                    key = jsonstr['key']
+                    if 'payload' in jsonstr:
+                        payload = jsonstr['payload']
+                        Teams.put(key, payload)
             print_lock.release()
             break;
         except IOError as ioe:
