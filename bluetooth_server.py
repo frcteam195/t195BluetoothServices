@@ -118,11 +118,12 @@ def threaded(client_sock):
                     if 'payload' in jsonstr:
                         payload = jsonstr['payload']
                         Teams.put(key, payload)
-            logging.error(str(datetime.datetime.now()) + " Releasing lock.")
+            logging.info(str(datetime.datetime.now()) + " Releasing lock.")
 #            print_lock.release()
             break;
         except IOError as ioe:
             logging.error(str(datetime.datetime.now()) + " Error: {0}".format(ioe))
+            break
     client_sock.close()
 
 
@@ -143,7 +144,7 @@ def Main():
                        )
 
     while True:
-        logging.info(str(datetime.datetime.now()) + " Waiting for connection on RFCOMM channel %d".format(port))
+        logging.info(str(datetime.datetime.now()) + " Waiting for connection on RFCOMM channel {}".format(port))
 
 
         try:
