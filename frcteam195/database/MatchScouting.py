@@ -19,4 +19,4 @@ def put(key_val, payload):
         setlist.append(s)
     set_str = ','.join(setlist)
     cmd = cmd_skeleton.format(set_str, where_clause)
-    sqlcmd.put(cmd)
+    return sqlcmd.put(cmd)
