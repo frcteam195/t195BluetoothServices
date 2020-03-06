@@ -118,11 +118,11 @@ def threaded(client_sock):
                     if 'payload' in jsonstr:
                         payload = jsonstr['payload']
                         Teams.put(key, payload)
+            logging.error(str(datetime.datetime.now()) + " Releasing lock.")
             print_lock.release()
             break;
         except IOError as ioe:
             logging.error(str(datetime.datetime.now()) + " Error: {0}".format(ioe))
-            ret_string.format('failure', '')
     client_sock.close()
 
 
@@ -150,7 +150,9 @@ def Main():
             client_sock, client_info = server_sock.accept()
             logging.info(str(datetime.datetime.now()) + " Accepted connection from " + str(client_info))
             print_lock.acquire()
+            logging.info(str(datetime.datetime.now()) + " Starting thread")
             start_new_thread(threaded, (client_sock,))
+            logging.info(str(datetime.datetime.now()) + " Thread started")
         except:
             logging.error("Unexpected error: %s".format(sys.exc_info()[0]))
     server_sock.close()
