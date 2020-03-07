@@ -32,10 +32,6 @@ import hashlib
 #for word in wordCloud:
 #    print(word)
 
-str = {"AutoStartPos":4,"NumWheels":6,"NumDriveMotors":3,"WheelTypeID":2,"DriveTypeID":2,"MotorTypeID":2,"LanguageID":1,"Speed":8,"GearRatio":"10:1","NumGearSpeed":1,"RobotLength":36,"RobotWidth":36,"RobotHeight":36,"RobotWeight":136,"Pneumatics":1,"NumPreload":5,"AutoBallsScored":5,"MoveBonus":1,"AutoPickUp":1,"AutoStartPosID":4,"AutoSummary":"cool","TeleBallsScored":14,"MaxBallCapacity":5,"ColorWheel":1,"TeleDefense":0,"TeleDefenseEvade":1,"TeleStrategy":"score big","CanClimb":1,"CenterClimb":1,"CanMoveOnBar":1,"LockingMechanism":0,"ClimbHeightID":8}
-x="10:1"
-z = isinstance(x, __builtins__.str)
-print(z)
-#for k,v in str.items():
-#    print(isinstance(v, str))
-#    print(type(v))
+datxt = {"AutoStartPos":4,"NumWheels":6,"NumDriveMotors":3,"WheelTypeID":2,"DriveTypeID":2,"MotorTypeID":2,"LanguageID":1,"Speed":8,"GearRatio":"10:1","NumGearSpeed":1,"RobotLength":36,"RobotWidth":36,"RobotHeight":36,"RobotWeight":136,"Pneumatics":1,"NumPreload":5,"AutoBallsScored":5,"MoveBonus":1,"AutoPickUp":1,"AutoStartPosID":4,"AutoSummary":"cool","TeleBallsScored":14,"MaxBallCapacity":5,"ColorWheel":1,"TeleDefense":0,"TeleDefenseEvade":1,"TeleStrategy":"score big","CanClimb":1,"CenterClimb":1,"CanMoveOnBar":1,"LockingMechanism":0,"ClimbHeightID":8}
+for k,v in datxt.items():
+    print(k, isinstance(v, str))
