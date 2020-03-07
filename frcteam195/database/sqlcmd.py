@@ -18,7 +18,7 @@ def get(cmd):
     except:
         if conn:
             conn.close()
-        logging.error("Unexpected error: %s".format(sys.exc_info()[0]))
+            logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(sys.exc_info()[0]))
     pass
 
 
