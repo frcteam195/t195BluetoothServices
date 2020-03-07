@@ -50,6 +50,7 @@ def get_list(cmd):
 
 
 def put(cmd):
+    logging.debug(str(datetime.datetime.now()) + " No records were updated: cmd={0}".format(cmd))
     try:
         conn = connect()
         cursor = conn.cursor()

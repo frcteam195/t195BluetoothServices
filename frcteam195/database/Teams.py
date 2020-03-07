@@ -13,7 +13,10 @@ def put(key_val, payload):
     where_clause = ' WHERE Team = {}'.format(key_val)
     setlist = []
     for k,v in payload.items():
-        s = set_fmt.format(k,v)
+        if v.isdigit():
+            s = set_fmt.format(k,v)
+        else:
+            s = set_fmt.format(k, "'{}'".format(v))
         setlist.append(s)
     set_str = ','.join(setlist)
     cmd = cmd_skeleton.format(set_str, where_clause)
