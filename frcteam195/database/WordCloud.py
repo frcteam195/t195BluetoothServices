@@ -11,7 +11,7 @@ def put(payload):
     col_list = []
     val_list = []
     for k,v in payload.items():
-        if isinstance(str, v):
+        if isinstance(v, __builtins__.str):
             val_list.append("'{}'".format(v))
         else:
             val_list.append("{}".format(v))
