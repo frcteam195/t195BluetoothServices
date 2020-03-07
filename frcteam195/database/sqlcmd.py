@@ -1,4 +1,6 @@
 from frcteam195.database import connect
+import logging
+import datetime
 
 
 def get(cmd):
@@ -30,8 +32,10 @@ def put(cmd):
     conn.commit()
     if cursor.rowcount < 1:
         conn.close()
+        logging.error(str(datetime.datetime.now()) + " No records were updated: cmd={0}".format(cmd))
         return("failure")
     else:
         conn.close()
+        logging.error(str(datetime.datetime.now()) + " {0} record(s) updated".format(cursor.rowcount))
         return("success")
 
