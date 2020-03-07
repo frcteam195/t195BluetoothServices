@@ -13,7 +13,7 @@ def put(key_val, payload):
     where_clause = ' WHERE Team = {}'.format(key_val)
     setlist = []
     for k,v in payload.items():
-        if type(v) == 'str':
+        if isinstance(str, v):
             s = set_fmt.format(k, "'{}'".format(v))
         else:
             s = set_fmt.format(k,v)

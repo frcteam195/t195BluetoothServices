@@ -32,7 +32,7 @@ import hashlib
 #for word in wordCloud:
 #    print(word)
 
-str = {"AutoStartPos":"10:1","AutoDidNotShow":0,"AutoMoveBonus":1,"AutoBallLow":0,"AutoBallOuter":0,"AutoBallInner":5,"AutoPenalty":0,"TeleBallLowZone1":0,"TeleBallOuterZone1":0,"TeleBallInnerZone1":0,"TeleBallOuterZone2":0,"TeleBallInnerZone2":0,"TeleBallOuterZone3":21,"TeleBallInnerZone3":4,"TeleBallOuterZone4":0,"TeleBallInnerZone4":0,"TeleBallOuterZone5":0,"TeleBallInnerZone5":0,"TeleWheelStage2Time":4,"TeleWheelStage2Status":1,"TeleWheelStage2Attempts":0,"TeleWheelStage3Time":0,"TeleWheelStage3Status":0,"TeleWheelStage3Attempts":0,"ClimbStatus":0,"ClimbHeight":0,"ClimbPosition":0,"ClimbMoveOnBar":0,"ClimbLevelStatus":1,"SummBrokeDown":0,"SummLostComm":0,"SummSubSystemBroke":0,"SummGroundPickup":0,"SummHopperLoad":0,"SummPlayedDefense":0,"SummDefPlayedAgainst":1}
+str = {"AutoStartPos":4,"NumWheels":6,"NumDriveMotors":3,"WheelTypeID":2,"DriveTypeID":2,"MotorTypeID":2,"LanguageID":1,"Speed":8,"GearRatio":"10:1","NumGearSpeed":1,"RobotLength":36,"RobotWidth":36,"RobotHeight":36,"RobotWeight":136,"Pneumatics":1,"NumPreload":5,"AutoBallsScored":5,"MoveBonus":1,"AutoPickUp":1,"AutoStartPosID":4,"AutoSummary":"cool","TeleBallsScored":14,"MaxBallCapacity":5,"ColorWheel":1,"TeleDefense":0,"TeleDefenseEvade":1,"TeleStrategy":"score big","CanClimb":1,"CenterClimb":1,"CanMoveOnBar":1,"LockingMechanism":0,"ClimbHeightID":8}
 print(type(str))
 for k,v in str.items():
     print(k,type(v))
