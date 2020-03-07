@@ -88,11 +88,7 @@ def threaded(client_sock):
             elif jsonstr['cmd'] == 'get-words':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 words = json.dumps(Words.get())
-                this_hash = hashlib.md5(words.encode()).hexdigest()
-                if this_hash == last_hash:
-                    ret_bytes = skip_msg.encode()
-                else:
-                    ret_bytes = ret_string.format(result, words, this_hash).encode()
+                ret_bytes = ret_string.format(result, words, "").encode()
                 send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-word-cloud':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
