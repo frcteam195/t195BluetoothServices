@@ -9,6 +9,7 @@ def get(cmd):
     results = None
     for row in cursor.fetchall():
         results = dict(zip(columns, row))
+    conn.close()
     return results
 
 def get_list(cmd):
@@ -19,6 +20,7 @@ def get_list(cmd):
     results = []
     for row in cursor.fetchall():
         results.append(dict(zip(columns, row)))
+    conn.close()
     return results
 
 def put(cmd):
@@ -27,7 +29,9 @@ def put(cmd):
     cursor.execute(cmd)
     conn.commit()
     if cursor.rowcount < 1:
+        conn.close()
         return("failure")
     else:
+        conn.close()
         return("success")
 

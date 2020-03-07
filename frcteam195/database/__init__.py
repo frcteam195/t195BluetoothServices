@@ -7,6 +7,7 @@ import sys
 DEFAULT_CONFIG_FILE = "frcteam195_database.json"
 
 def connect(config_file = None):
+    conn = None
     if None == config_file:
         config_file = DEFAULT_CONFIG_FILE
     try:

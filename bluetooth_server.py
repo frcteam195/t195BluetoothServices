@@ -1,4 +1,4 @@
-from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud
+from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud, connect
 from bluetooth import *
 from _thread import *
 import threading
@@ -21,7 +21,7 @@ def send_reply(client_sock, msg):
     while bytes_sent < msg_size:
         bytes_sent += client_sock.send(bytes_to_send)
         bytes_to_send = bytes_to_send[bytes_sent-1:]
-    client_sock.send(b'\0x03')
+    client_sock.send(b'\x03')
 
 
 def threaded(client_sock):
@@ -136,6 +136,13 @@ def threaded(client_sock):
 
 
 def Main():
+
+    conn = connect()
+    if conn == None:
+        logging.fatal(str(datetime.datetime.now()) + " Unable to connect to database -- exiting.")
+        return
+    conn.close()
+
     server_sock=BluetoothSocket( RFCOMM )
     server_sock.bind(("",PORT_ANY))
     server_sock.listen(1)
