@@ -13,7 +13,7 @@ def put(key_val, payload):
     where_clause = ' WHERE Team = {}'.format(key_val)
     setlist = []
     set_str = ''
-    for k,v in payload:
+    for k,v in payload.items():
         s = set_fmt.format(k,v)
         setlist.append(s)
     set_str = ','.join(setlist)
