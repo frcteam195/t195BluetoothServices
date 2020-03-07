@@ -2,6 +2,7 @@ from frcteam195.database import connect
 import logging
 import datetime
 import sys
+from mysql.connector import Error as MySQLError
 
 
 def get(cmd):
@@ -15,11 +16,15 @@ def get(cmd):
             results = dict(zip(columns, row))
         conn.close()
         return results
+    except MySQLError as merr:
+        logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(merr))
+        pass
     except:
+        logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(sys.exc_info()[0]))
+        pass
+    finally:
         if conn:
             conn.close()
-            logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(sys.exc_info()[0]))
-    pass
 
 
 def get_list(cmd):
@@ -33,11 +38,15 @@ def get_list(cmd):
             results.append(dict(zip(columns, row)))
         conn.close()
         return results
+    except MySQLError as merr:
+        logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(merr))
+        pass
     except:
+        logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(sys.exc_info()[0]))
+        pass
+    finally:
         if conn:
             conn.close()
-            logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(sys.exc_info()[0]))
-        pass
 
 
 def put(cmd):
@@ -54,8 +63,12 @@ def put(cmd):
             conn.close()
             logging.error(str(datetime.datetime.now()) + " {0} record(s) updated".format(cursor.rowcount))
             return ("success")
+    except MySQLError as merr:
+        logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(merr))
+        pass
     except:
+        logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(sys.exc_info()[0]))
+        pass
+    finally:
         if conn:
             conn.close()
-            logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(sys.exc_info()[0]))
-        pass
