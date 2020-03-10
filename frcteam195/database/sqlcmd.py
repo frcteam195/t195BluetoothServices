@@ -50,26 +50,22 @@ def get_list(cmd):
 
 
 def put(cmd):
-    logging.debug(str(datetime.datetime.now()) + " No records were updated: cmd={0}".format(cmd))
+    logging.debug(str(datetime.datetime.now()) + " Executing update command: cmd={0}".format(cmd))
+    ret = "failure"
     try:
         conn = connect()
         cursor = conn.cursor()
         cursor.execute(cmd)
         conn.commit()
-        if cursor.rowcount < 1:
-            conn.close()
-            logging.error(str(datetime.datetime.now()) + " No records were updated: cmd={0}".format(cmd))
-            return ("failure")
-        else:
-            conn.close()
-            logging.error(str(datetime.datetime.now()) + " {0} record(s) updated".format(cursor.rowcount))
-            return ("success")
+        logging.info(str(datetime.datetime.now()) + " {} records were updated: cmd={0}".format(cursor.rowcount, cmd))
+        ret = "success"
     except MySQLError as merr:
-        logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(merr))
+        logging.error(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(merr))
         pass
     except:
-        logging.info(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(sys.exc_info()[0]))
+        logging.error(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(sys.exc_info()[0]))
         pass
     finally:
         if conn:
             conn.close()
+    return(ret)
