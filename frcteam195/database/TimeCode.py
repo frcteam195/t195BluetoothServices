@@ -11,7 +11,6 @@ def put():
 def get():
     ret = 0;
     results = sqlcmd.get("SELECT LastUpdate FROM TimeCode")
-    js = json.loads(results)
-    if "LastUpdate" in js:
-        ret = int(js['LastUpdate'])
+    if "LastUpdate" in results:
+        ret = int(results['LastUpdate'])
     return ret
