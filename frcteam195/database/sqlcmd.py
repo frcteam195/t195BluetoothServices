@@ -62,6 +62,9 @@ def put(cmd):
     except MySQLError as merr:
         logging.error(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(merr))
         pass
+    except ValueError as verr:
+        logging.error(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(verr))
+        pass
     except:
         logging.error(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(sys.exc_info()[0]))
         pass
