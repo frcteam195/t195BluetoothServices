@@ -14,7 +14,7 @@ def connect(config_file = None):
         with open(config_file) as f:
             config = json.loads(f.read())
             item = config['config']
-            logging.error(str(datetime.datetime.now()) + " Using database {0} on {1}".format(item['database'], item['host']))
+            logging.info(str(datetime.datetime.now()) + " Using database {0} on {1}".format(item['database'], item['host']))
 
             conn = mariadb.connect(user=item['user'],
                                passwd=item['cred'],
