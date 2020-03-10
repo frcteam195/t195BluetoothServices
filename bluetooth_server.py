@@ -6,6 +6,7 @@ import datetime
 import logging
 import sys
 import json
+import time
 
 
 logging.basicConfig(level=logging.INFO)
@@ -19,6 +20,7 @@ def send_reply(client_sock, msg):
     bytes_to_send = msg
     while bytes_sent < msg_size:
         bytes_sent += client_sock.send(bytes_to_send)
+        time.sleep(.5)
         bytes_to_send = bytes_to_send[bytes_sent-1:]
     client_sock.send(b'\x03')
 
