@@ -121,6 +121,10 @@ def threaded(client_sock):
                         ret = Teams.put(key, payload)
                 ret_string = ret_string.format(ret, 0, "").encode()
                 send_reply(client_sock, ret_string)
+            elif jsonstr['cmd'] == 'ping':
+                logging.info(str(datetime.datetime.now()) + " Received put-teams request {0}".format(jsonstr['cmd']))
+                ret_string = ret_string.format('success', 0, '').encode()
+                send_reply(client_sock, ret_string)
             logging.info(str(datetime.datetime.now()) + " Releasing lock.")
             print_lock.release()
             break;
