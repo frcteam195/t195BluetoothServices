@@ -32,7 +32,7 @@ def threaded(client_sock):
             data = client_sock.recv(2048)
             logging.debug(str(datetime.datetime.now()) + " received [%s]" % data)
             if data == b'\x03':
-                logging.info(str(datetime.datetime.now()) + " ETX character found!")
+                logging.debug(str(datetime.datetime.now()) + " ETX character found!")
                 print_lock.release()
                 break
 
@@ -155,16 +155,16 @@ def Main():
                        )
 
     while True:
-        logging.info(str(datetime.datetime.now()) + " Waiting for connection on RFCOMM channel {}".format(port))
+        logging.debug(str(datetime.datetime.now()) + " Waiting for connection on RFCOMM channel {}".format(port))
 
 
         try:
             client_sock, client_info = server_sock.accept()
-            logging.info(str(datetime.datetime.now()) + " Accepted connection from " + str(client_info))
+            logging.debug(str(datetime.datetime.now()) + " Accepted connection from " + str(client_info))
             print_lock.acquire()
-            logging.info(str(datetime.datetime.now()) + " Starting command handling")
+            logging.debug(str(datetime.datetime.now()) + " Starting command handling")
             start_new_thread(threaded, (client_sock,))
-            logging.info(str(datetime.datetime.now()) + " Command handling done")
+            logging.debug(str(datetime.datetime.now()) + " Command handling done")
         except:
             logging.error("Unexpected error: %s".format(sys.exc_info()[0]))
             continue
