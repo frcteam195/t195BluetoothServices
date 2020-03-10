@@ -1,5 +1,6 @@
 from frcteam195.database import sqlcmd
 import datetime
+import json
 
 
 def put():
@@ -8,5 +9,9 @@ def put():
 
 
 def get():
+    ret = 0;
     results = sqlcmd.get("SELECT LastUpdate FROM TimeCode")
-    return results
+    js = json.loads(results)
+    if "LastUpdate" in js:
+        ret = int(js['LastUpdate'])
+    return ret
