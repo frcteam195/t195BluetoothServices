@@ -57,7 +57,7 @@ def put(cmd):
         cursor = conn.cursor()
         cursor.execute(cmd)
         conn.commit()
-        logging.info(str(datetime.datetime.now()) + " {} records were updated: cmd={0}".format(cursor.rowcount, cmd))
+        logging.info(str(datetime.datetime.now()) + " {0} records were updated: cmd={1}".format(cursor.rowcount, cmd))
         ret = "success"
     except MySQLError as merr:
         logging.error(str(datetime.datetime.now()) + " Unexpected error occurred {0}".format(merr))
