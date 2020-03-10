@@ -68,13 +68,13 @@ def threaded(client_sock):
                     payload = jsonstr['payload']
                     eventId = payload['eventId']
                 matches = json.dumps(MatchScouting.get(eventId))
-                logging.info("Size of matches is {}".format(len(matches)))
+                logging.info(str(datetime.datetime.now()) + " Size of matches is {}".format(len(matches)))
                 this_hash = hashlib.md5(matches.encode()).hexdigest()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
                     ret_bytes = ret_string.format(result, matches, this_hash).encode()
-                logging.info("Size of matches return string is {}".format(len(ret_bytes)))
+                logging.info(str(datetime.datetime.now()) + " Size of matches return string is {}".format(len(ret_bytes)))
                 send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-teams':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
