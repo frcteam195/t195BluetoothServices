@@ -6,7 +6,7 @@ import sys
 
 
 def Main():
-    datime = datetime.datetime.timestamp(datetime.datetime.now())
+    datime = int(datetime.datetime.timestamp(datetime.datetime.now()))
     cmd = "UPDATE time_code SET last_update = {}".format(datime)
     conn = None
     try:
