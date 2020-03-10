@@ -30,7 +30,7 @@ def threaded(client_sock):
     while True:
         try:
             data = client_sock.recv(2048)
-            logging.info(str(datetime.datetime.now()) + " received [%s]" % data)
+            logging.debug(str(datetime.datetime.now()) + " received [%s]" % data)
             if data == b'\x03':
                 logging.info(str(datetime.datetime.now()) + " ETX character found!")
                 print_lock.release()
@@ -120,10 +120,6 @@ def threaded(client_sock):
                         payload = jsonstr['payload']
                         ret = Teams.put(key, payload)
                 ret_string = ret_string.format(ret, 0, "").encode()
-                send_reply(client_sock, ret_string)
-            elif jsonstr['cmd'] == 'ping':
-                logging.info(str(datetime.datetime.now()) + " Received put-teams request {0}".format(jsonstr['cmd']))
-                ret_string = ret_string.format('success', 0, '').encode()
                 send_reply(client_sock, ret_string)
             logging.info(str(datetime.datetime.now()) + " Releasing lock.")
             print_lock.release()
