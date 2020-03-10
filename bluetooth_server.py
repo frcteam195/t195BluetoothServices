@@ -1,4 +1,4 @@
-from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud, connect
+from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud, connect, TimeCode
 from bluetooth import *
 from _thread import *
 import threading
@@ -6,7 +6,6 @@ import datetime
 import logging
 import sys
 import json
-import hashlib
 
 
 logging.basicConfig(level=logging.INFO)
@@ -37,7 +36,7 @@ def threaded(client_sock):
                 break
 
             jsonstr = json.loads(data)
-            last_hash = "not a hash"
+            last_hash = 195
             if 'last_hash' in jsonstr:
                 last_hash = jsonstr['last_hash']
             logging.info(str(datetime.datetime.now()) + " " + jsonstr['cmd'])
@@ -47,7 +46,7 @@ def threaded(client_sock):
                     payload = jsonstr['payload']
                     computerName = payload['computerName']
                 config = json.dumps(Config.get(computerName))
-                this_hash = hashlib.md5(config.encode()).hexdigest()
+                this_hash = TimeCode.get()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
@@ -56,7 +55,7 @@ def threaded(client_sock):
             elif jsonstr['cmd'] == 'get-users':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 users = json.dumps(Users.get())
-                this_hash = hashlib.md5(users.encode()).hexdigest()
+                this_hash = TimeCode.get()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
@@ -69,7 +68,7 @@ def threaded(client_sock):
                     eventId = payload['eventId']
                 matches = json.dumps(MatchScouting.get(eventId))
                 logging.info(str(datetime.datetime.now()) + " Size of matches is {}".format(len(matches)))
-                this_hash = hashlib.md5(matches.encode()).hexdigest()
+                this_hash = TimeCode.get()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
@@ -79,7 +78,7 @@ def threaded(client_sock):
             elif jsonstr['cmd'] == 'get-teams':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 teams = json.dumps(Teams.get())
-                this_hash = hashlib.md5(teams.encode()).hexdigest()
+                this_hash = TimeCode.get()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
@@ -96,7 +95,7 @@ def threaded(client_sock):
                     payload = jsonstr['payload']
                     eventId = payload['eventId']
                 wordcloud = json.dumps(WordCloud.get(eventId))
-                this_hash = hashlib.md5(wordcloud.encode()).hexdigest()
+                this_hash = TimeCode.get()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
