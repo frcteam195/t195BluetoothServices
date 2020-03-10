@@ -33,8 +33,6 @@ import datetime
 #for word in wordCloud:
 #    print(word)
 
-datime = datetime.datetime.timestamp(datetime.datetime.now())
-print(datime)
-datxt = {"AutoStartPos":4,"NumWheels":6,"NumDriveMotors":3,"WheelTypeID":2,"DriveTypeID":2,"MotorTypeID":2,"LanguageID":1,"Speed":8,"GearRatio":"10:1","NumGearSpeed":1,"RobotLength":36,"RobotWidth":36,"RobotHeight":36,"RobotWeight":136,"Pneumatics":1,"NumPreload":5,"AutoBallsScored":5,"MoveBonus":1,"AutoPickUp":1,"AutoStartPosID":4,"AutoSummary":"cool","TeleBallsScored":14,"MaxBallCapacity":5,"ColorWheel":1,"TeleDefense":0,"TeleDefenseEvade":1,"TeleStrategy":"score big","CanClimb":1,"CenterClimb":1,"CanMoveOnBar":1,"LockingMechanism":0,"ClimbHeightID":8}
-for k,v in datxt.items():
-    print(k, isinstance(v, str))
+jj = '{"LastUpdate": 1583845194}'
+xx = json.loads(jj)
+print(xx['LastUpdate'])
