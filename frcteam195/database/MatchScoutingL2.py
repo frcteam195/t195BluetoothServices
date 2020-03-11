@@ -4,7 +4,7 @@ from frcteam195.database import sqlcmd
 def get(event_id=None):
     cmd = "SELECT a.*, b.MatchNo MatchNo FROM MatchScoutingL2 a, Matches b " \
           "WHERE a.EventID = {} and a.MatchID = b.MatchID " \
-          "ORDER BY MatchID, AllianceStationID".format(event_id)
+          "ORDER BY MatchNo".format(event_id)
     results = sqlcmd.get_list(cmd)
     return results
 
