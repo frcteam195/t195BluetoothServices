@@ -1,4 +1,4 @@
-from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud
+from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud, MatchScoutingL2
 import json
 import hashlib
 import datetime
@@ -33,6 +33,10 @@ import datetime
 #for word in wordCloud:
 #    print(word)
 
-jj = '{"LastUpdate": 1583845194}'
-xx = json.loads(jj)
-print(xx['LastUpdate'])
+#jj = '{"LastUpdate": 1583845194}'
+#xx = json.loads(jj)
+#print(xx['LastUpdate'])
+
+matches = MatchScoutingL2.get(4)
+for match in matches:
+    print(match['TeamRed'],match['TeamBlue'])
