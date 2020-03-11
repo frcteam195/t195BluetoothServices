@@ -1,4 +1,4 @@
-from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud, connect, TimeCode
+from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud, connect, TimeCode, MatchScoutingL2
 from bluetooth import *
 from _thread import *
 import threading
@@ -68,12 +68,26 @@ def threaded(client_sock):
                 if 'payload' in jsonstr:
                     payload = jsonstr['payload']
                     eventId = payload['eventId']
-                matches = json.dumps(MatchScouting.get(eventId))
-                logging.info(str(datetime.datetime.now()) + " Size of matches is {}".format(len(matches)))
                 this_hash = TimeCode.get()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
+                    matches = json.dumps(MatchScouting.get(eventId))
+                    logging.info(str(datetime.datetime.now()) + " Size of matches is {}".format(len(matches)))
+                    ret_bytes = ret_string.format(result, matches, this_hash).encode()
+                logging.info(str(datetime.datetime.now()) + " Size of matches return string is {}".format(len(ret_bytes)))
+                send_reply(client_sock, ret_bytes)
+            elif jsonstr['cmd'] == 'get-matches-l2':
+                logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
+                if 'payload' in jsonstr:
+                    payload = jsonstr['payload']
+                    eventId = payload['eventId']
+                this_hash = TimeCode.get()
+                if this_hash == last_hash:
+                    ret_bytes = skip_msg.encode()
+                else:
+                    matches = json.dumps(MatchScoutingL2.get(eventId))
+                    logging.info(str(datetime.datetime.now()) + " Size of matches is {}".format(len(matches)))
                     ret_bytes = ret_string.format(result, matches, this_hash).encode()
                 logging.info(str(datetime.datetime.now()) + " Size of matches return string is {}".format(len(ret_bytes)))
                 send_reply(client_sock, ret_bytes)
@@ -122,6 +136,8 @@ def threaded(client_sock):
                         ret = Teams.put(key, payload)
                 ret_string = ret_string.format(ret, 0, "").encode()
                 send_reply(client_sock, ret_string)
+            else:
+                send_reply(client_sock, ret_string.format("failure", "", 0).encode())
             logging.info(str(datetime.datetime.now()) + " Releasing lock.")
             print_lock.release()
             break;
