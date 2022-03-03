@@ -107,10 +107,7 @@ def threaded(client_sock):
                 send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-word-cloud':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
-                if 'payload' in jsonstr:
-                    payload = jsonstr['payload']
-                    eventId = payload['eventId']
-                wordcloud = json.dumps(WordCloud.get(eventId))
+                wordcloud = json.dumps(WordCloud.get())
                 this_hash = TimeCode.get()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
@@ -134,6 +131,13 @@ def threaded(client_sock):
                     if 'payload' in jsonstr:
                         payload = jsonstr['payload']
                         ret = Teams.put(key, payload)
+                ret_string = ret_string.format(ret, 0, "").encode()
+                send_reply(client_sock, ret_string)
+            elif jsonstr['cmd'] == 'put-word-cloud':
+                logging.info(str(datetime.datetime.now()) + " Received put-teams request {0}".format(jsonstr['cmd']))
+                if 'payload' in jsonstr:
+                    payload = jsonstr['payload']
+                    ret = WordCloud.put(payload)
                 ret_string = ret_string.format(ret, 0, "").encode()
                 send_reply(client_sock, ret_string)
             else:
