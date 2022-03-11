@@ -1,4 +1,4 @@
-from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud, connect, TimeCode, MatchScoutingL2
+from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud, connect, TimeCode, MatchScoutingL2, Matches
 from bluetooth import *
 from _thread import *
 import threading
@@ -91,6 +91,17 @@ def threaded(client_sock):
                     ret_bytes = ret_string.format(result, matches, this_hash).encode()
                 logging.info(str(datetime.datetime.now()) + " Size of matches return string is {}".format(len(ret_bytes)))
                 send_reply(client_sock, ret_bytes)
+            elif jsonstr['cmd'] == 'get-matches-all':
+                logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
+                this_hash = TimeCode.get()
+                if this_hash == last_hash:
+                    ret_bytes = skip_msg.encode()
+                else:
+                    matches = json.dumps(Matches.get())
+                    logging.info(str(datetime.datetime.now()) + " Size of matches is {}".format(len(matches)))
+                    ret_bytes = ret_string.format(result, matches, this_hash).encode()
+                logging.info(str(datetime.datetime.now()) + " Size of matches return string is {}".format(len(ret_bytes)))
+                send_reply(client_sock, ret_bytes)
             elif jsonstr['cmd'] == 'get-teams':
                 logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
                 teams = json.dumps(Teams.get())
@@ -142,6 +153,7 @@ def threaded(client_sock):
                 send_reply(client_sock, ret_string)
             else:
                 send_reply(client_sock, ret_string.format("failure", "", 0).encode())
+                logging.error(str(datetime.datetime.now()) + " Unrecognized request {0}".format(jsonstr['cmd']))
             logging.info(str(datetime.datetime.now()) + " Releasing lock.")
             print_lock.release()
             break;

@@ -3,22 +3,22 @@ import json
 import hashlib
 import datetime
 
-#users = Users.get()
-#for user in users:
-#    print(user['FirstName'], user['LastName'])
+users = Users.get()
+for user in users:
+    print(user['FirstName'], user['LastName'])
 
-#matches = MatchScouting.get(1)
-#for match in matches:
-#    print(match['Team'])
+matches = MatchScouting.get(1)
+for match in matches:
+    print(match['Team'])
 
-# configs = Config.get('Team 195 Scout 1')
-# jconfig = json.dumps(configs).encode()
-# hash_object = hashlib.md5(jconfig).hexdigest()
-# print(hash_object)
-# if hash_object == "ef50a0aa7444fb905639e4c78819dbcd":
-#     print("They match!")
+configs = Config.get('Team 195 Scout 1')
+#jconfig = json.dumps(configs).encode()
+#hash_object = hashlib.md5(jconfig).hexdigest()
+#print(hash_object)
+#if hash_object == "ef50a0aa7444fb905639e4c78819dbcd":
+#    print("They match!")
 
-#print(configs)
+print(configs)
 #for config in configs:
 #    print(json.dumps(config))
 
@@ -37,6 +37,6 @@ import datetime
 #xx = json.loads(jj)
 #print(xx['LastUpdate'])
 
-matches = MatchScoutingL2.get(4)
-for match in matches:
-    print(match['TeamRed'],match['TeamBlue'])
+#matches = MatchScoutingL2.get(4)
+#for match in matches:
+#   print(match['TeamRed'],match['TeamBlue'])
