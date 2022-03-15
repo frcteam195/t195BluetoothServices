@@ -8,12 +8,12 @@ def get():
 
 def put(payload):
     ret = 'failure'
-    cmd_skeleton = 'REPLACE WordCount ({}) VALUES ({})'
-    for item in payload:
+    cmd_skeleton = 'REPLACE WordCloud ({}) VALUES ({})'
+    for row in payload:
         col_list = []
         val_list = []
-        for k,v in payload.items():
-            if isinstance(v, __builtins__.str):
+        for k,v in row.items():
+            if isinstance(v, str):
                 val_list.append("'{}'".format(v))
             else:
                 val_list.append("{}".format(str(v)))

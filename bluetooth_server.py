@@ -25,23 +25,36 @@ def send_reply(client_sock, msg):
     client_sock.send(b'\x03')
 
 
+def recv_timeout(the_socket,timeout=2):
+    the_socket.setblocking(0)
+    total_data=[];data=b'';begin=time.time()
+    while 1:
+        #if you got some data, then break after wait sec
+        if total_data and time.time()-begin>timeout:
+            break
+        #if you got no data at all, wait a little longer
+        elif time.time()-begin>timeout*2:
+            break
+        try:
+            data=the_socket.recv(8192)
+            if data:
+                total_data.append(data)
+                begin=time.time()
+            else:
+                time.sleep(0.1)
+        except:
+            pass
+    return b''.join(total_data)
+
+
 def threaded(client_sock):
     ret_string = "{{'result': '{0}', 'payload':{1}, 'hash': '{2}'}}"
     result = 'success'
     while True:
         try:
-            data = b''
-            while True:
-                new_data = client_sock.recv(2048)
-                if len(new_data) == 0: break
-                data += new_data
-            if data is None:
-                logging.debug(str(datetime.datetime.now()) + " empty message received!")
-                print_lock.release()
-                break
-            elif data == b'\x03':
+            data = recv_timeout(client_sock, 2)
+            if data == b'\x03':
                 logging.debug(str(datetime.datetime.now()) + " ETX character found!")
-                print_lock.release()
                 break
 
             logging.debug(str(datetime.datetime.now()) + " received [%s]" % data)
@@ -153,7 +166,7 @@ def threaded(client_sock):
                 ret_string = ret_string.format(ret, 0, "").encode()
                 send_reply(client_sock, ret_string)
             elif jsonstr['cmd'] == 'put-word-cloud':
-                logging.info(str(datetime.datetime.now()) + " Received put-teams request {0}".format(jsonstr['cmd']))
+                logging.info(str(datetime.datetime.now()) + " Received put-word-cloud request {0}".format(jsonstr['cmd']))
                 if 'payload' in jsonstr:
                     payload = jsonstr['payload']
                     ret = WordCloud.put(payload)
@@ -163,14 +176,16 @@ def threaded(client_sock):
                 send_reply(client_sock, ret_string.format("failure", "", 0).encode())
                 logging.error(str(datetime.datetime.now()) + " Unrecognized request {0}".format(jsonstr['cmd']))
             logging.info(str(datetime.datetime.now()) + " Releasing lock.")
-            print_lock.release()
             break;
         except IOError as ioe:
             logging.error(str(datetime.datetime.now()) + " Error: {0}".format(ioe))
+            send_reply(client_sock, ret_string)
         except Exception as ee:
             logging.error(str(datetime.datetime.now()) + " Error: {0}".format(ee))
+            send_reply(client_sock, ret_string)
         except:
             logging.error(str(datetime.datetime.now()) + " Unknown exception occurred!")
+            send_reply(client_sock, ret_string)
         finally:
             client_sock.close()
             if print_lock.locked():
