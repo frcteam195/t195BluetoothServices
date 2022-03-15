@@ -159,9 +159,14 @@ def threaded(client_sock):
             break;
         except IOError as ioe:
             logging.error(str(datetime.datetime.now()) + " Error: {0}".format(ioe))
+        except Exception as ee:
+            logging.error(str(datetime.datetime.now()) + " Error: {0}".format(ee))
+        except:
+            logging.error(str(datetime.datetime.now()) + " Unknown exception occurred!")
+        finally:
+            client_sock.close()
             print_lock.release()
             break
-    client_sock.close()
 
 
 def Main():
