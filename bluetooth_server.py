@@ -30,7 +30,7 @@ def threaded(client_sock):
     result = 'success'
     while True:
         try:
-        data = None
+            data = None
             while True:
                 new_data = client_sock.recv(2048)
                 if len(new_data) == 0: break
