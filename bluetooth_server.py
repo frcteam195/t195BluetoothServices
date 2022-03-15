@@ -30,7 +30,10 @@ def threaded(client_sock):
     result = 'success'
     while True:
         try:
-            data = client_sock.recv(2048)
+            while True:
+                new_data = client_sock.recv(2048)
+                if len(new_data) == 0: break
+                data += new_data
             logging.debug(str(datetime.datetime.now()) + " received [%s]" % data)
             if data == b'\x03':
                 logging.debug(str(datetime.datetime.now()) + " ETX character found!")
@@ -165,7 +168,8 @@ def threaded(client_sock):
             logging.error(str(datetime.datetime.now()) + " Unknown exception occurred!")
         finally:
             client_sock.close()
-            print_lock.release()
+            if print_lock.locked():
+                print_lock.release()
             break
 
 
