@@ -30,16 +30,21 @@ def threaded(client_sock):
     result = 'success'
     while True:
         try:
+        data = None
             while True:
                 new_data = client_sock.recv(2048)
                 if len(new_data) == 0: break
                 data += new_data
-            logging.debug(str(datetime.datetime.now()) + " received [%s]" % data)
-            if data == b'\x03':
+            if data is None:
+                logging.debug(str(datetime.datetime.now()) + " empty message received!")
+                print_lock.release()
+                break
+            elif data == b'\x03':
                 logging.debug(str(datetime.datetime.now()) + " ETX character found!")
                 print_lock.release()
                 break
 
+            logging.debug(str(datetime.datetime.now()) + " received [%s]" % data)
             jsonstr = json.loads(data)
             last_hash = 195
             if 'last_hash' in jsonstr:
