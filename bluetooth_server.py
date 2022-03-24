@@ -16,13 +16,20 @@ skip_msg = "{'result': 'skip'}"
 
 def send_reply(client_sock, msg):
     msg_size = len(msg)
+    logging.debug("Message size is {}".format(msg_size))
     bytes_sent = 0
     bytes_to_send = msg
     while bytes_sent < msg_size:
-        bytes_sent += client_sock.send(bytes_to_send)
+        t_bytes_sent = client_sock.send(bytes_to_send)
+        logging.debug("Bytes sent this chunk {}".format(t_bytes_sent))
+        bytes_sent += t_bytes_sent
+        logging.debug("Sent total of {} bytes".format(bytes_sent))
         time.sleep(.5)
-        bytes_to_send = bytes_to_send[bytes_sent-1:]
+        bytes_to_send = msg[bytes_sent-1:]
+        logging.debug("Bytes to send {}".format(len(bytes_to_send)))
+    logging.debug("Sending EOD")
     client_sock.send(b'\x03')
+    logging.debug("EOD sent.")
 
 
 def recv_timeout(the_socket,timeout=2):
