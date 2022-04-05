@@ -1,7 +1,7 @@
 from frcteam195.database import Users, Config, MatchScouting, Teams, Words, WordCloud, connect, TimeCode, MatchScoutingL2, Matches
-from bluetooth import *
-from _thread import *
+import socket
 import threading
+import socketserver
 import datetime
 import logging
 import sys
@@ -13,8 +13,15 @@ logging.basicConfig(level=logging.INFO)
 print_lock = threading.Lock()
 skip_msg = "{'result': 'skip'}"
 
+class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
+
+    def handle(self):
+        threaded(self.request)
+
+
 
 def send_reply(client_sock, msg):
+    msg += b'3'
     msg_size = len(msg)
     logging.debug("Message size is {}".format(msg_size))
     bytes_sent = 0
@@ -23,13 +30,10 @@ def send_reply(client_sock, msg):
         t_bytes_sent = client_sock.send(bytes_to_send)
         logging.debug("Bytes sent this chunk {}".format(t_bytes_sent))
         bytes_sent += t_bytes_sent
-        logging.debug("Sent total of {} bytes".format(bytes_sent))
+        logging.debug("Sent total of {} bytes so far...".format(bytes_sent))
         time.sleep(.5)
         bytes_to_send = msg[bytes_sent:]
         logging.debug("Bytes to send {}".format(len(bytes_to_send)))
-    logging.debug("Sending EOD")
-    client_sock.send(b'\x03')
-    logging.debug("EOD sent.")
 
 
 def recv_timeout(the_socket,timeout=2):
@@ -200,7 +204,11 @@ def threaded(client_sock):
             break
 
 
-def Main():
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    pass
+
+
+def main():
 
     conn = connect()
     if conn == None:
@@ -208,37 +216,11 @@ def Main():
         return
     conn.close()
 
-    server_sock=BluetoothSocket( RFCOMM )
-    server_sock.bind(("",PORT_ANY))
-    server_sock.listen(1)
+    HOST, PORT = "0.0.0.0", 60195
 
-    port = server_sock.getsockname()[1]
-
-    uuid = "c3252081-b20b-46df-a9f8-1c3722eadbef"
-
-    advertise_service( server_sock, "Team195ScoutingServer",
-                       service_id = uuid,
-                       service_classes = [ uuid, SERIAL_PORT_CLASS ],
-                       profiles = [ SERIAL_PORT_PROFILE ],
-                       #       protocols = [ OBEX_UUID ]
-                       )
-
-    while True:
-        logging.debug(str(datetime.datetime.now()) + " Waiting for connection on RFCOMM channel {}".format(port))
-
-
-        try:
-            client_sock, client_info = server_sock.accept()
-            logging.debug(str(datetime.datetime.now()) + " Accepted connection from " + str(client_info))
-            print_lock.acquire()
-            logging.debug(str(datetime.datetime.now()) + " Starting command handling")
-            start_new_thread(threaded, (client_sock,))
-            logging.debug(str(datetime.datetime.now()) + " Command handling done")
-        except:
-            logging.error("Unexpected error: %s".format(sys.exc_info()[0]))
-            continue
-    server_sock.close()
+    with ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler) as server:
+        server.serve_forever()
 
 
 if __name__ == '__main__':
-    Main()
+    main()

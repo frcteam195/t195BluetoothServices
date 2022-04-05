@@ -22,3 +22,4 @@ def put(key_val, payload):
     set_str = ','.join(setlist)
     cmd = cmd_skeleton.format(set_str, where_clause)
     return sqlcmd.put(cmd)
+
