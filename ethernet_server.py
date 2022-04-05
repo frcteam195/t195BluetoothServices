@@ -100,11 +100,28 @@ def threaded(client_sock):
                 if 'payload' in jsonstr:
                     payload = jsonstr['payload']
                     eventId = payload['eventId']
+                    allianceStationId = None
+                    if 'allianceStationId' in payload:
+                        allianceStationId = payload['allianceStationId']
                 this_hash = TimeCode.get()
                 if this_hash == last_hash:
                     ret_bytes = skip_msg.encode()
                 else:
-                    matches = json.dumps(MatchScouting.get(eventId))
+                    matches = json.dumps(MatchScouting.get(eventId, allianceStationId))
+                    logging.info(str(datetime.datetime.now()) + " Size of matches is {}".format(len(matches)))
+                    ret_bytes = ret_string.format(result, matches, this_hash).encode()
+                logging.info(str(datetime.datetime.now()) + " Size of matches return string is {}".format(len(ret_bytes)))
+                send_reply(client_sock, ret_bytes)
+            elif jsonstr['cmd'] == 'get-match-teams':
+                logging.info(str(datetime.datetime.now()) + " Sending response to {0}".format(jsonstr['cmd']))
+                if 'payload' in jsonstr:
+                    payload = jsonstr['payload']
+                    matchId = payload['matchId']
+                this_hash = TimeCode.get()
+                if this_hash == last_hash:
+                    ret_bytes = skip_msg.encode()
+                else:
+                    matches = json.dumps(Matches.get(matchId))
                     logging.info(str(datetime.datetime.now()) + " Size of matches is {}".format(len(matches)))
                     ret_bytes = ret_string.format(result, matches, this_hash).encode()
                 logging.info(str(datetime.datetime.now()) + " Size of matches return string is {}".format(len(ret_bytes)))

@@ -1,10 +1,15 @@
 from frcteam195.database import sqlcmd
 
 
-def get(event_id=None):
-    cmd = "SELECT a.*, b.MatchNo MatchNo FROM MatchScouting a, Matches b " \
-                         "WHERE a.EventID = {} and a.MatchID = b.MatchID " \
-                         "ORDER BY MatchNo, AllianceStationID".format(event_id)
+def get(event_id=None, allianceStationId=None):
+    if allianceStationId is not None:
+        cmd = """SELECT a.*, b.MatchNo MatchNo FROM MatchScouting a, Matches b
+                         WHERE a.EventID = {} AND a.MatchID = b.MatchID AND AllianceStationID = {}
+                         ORDER BY MatchNo, AllianceStationID""".format(event_id, allianceStationId)
+    else:
+        cmd = """SELECT a.*, b.MatchNo MatchNo FROM MatchScouting a, Matches b
+                         WHERE a.EventID = {} and a.MatchID = b.MatchID
+                         ORDER BY MatchNo, AllianceStationID""".format(event_id)    
     results = sqlcmd.get_list(cmd)
     return results
 
